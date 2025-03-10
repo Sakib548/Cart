@@ -46,21 +46,24 @@ const reducer = (state, action) => {
 
   if (action.type === Decrease_Amount) {
     //const newItem = { ...state.cart };
-    const updateItem = state.cart.map((item) => {
+    if (
+      state.cart.some(
+        (item) => item.id === action.payload.id && item.amount === 1
+      )
+    ) {
+      const newCart = state.cart.filter(
+        (item) => item.id !== action.payload.id
+      );
+      return { ...state, cart: newCart };
+    }
+
+    const updatedCart = state.cart.map((item) => {
       if (item.id !== action.payload.id) {
         return item;
       } else {
-        if (item.amount === 1) {
-          const newCart = state.cart.filter(
-            (item) => item.id !== action.payload.id
-          );
-          return { ...state, cart: newCart };
-        }
         return { ...item, amount: item.amount - 1 };
       }
     });
-
-    return { ...state, cart: updateItem };
   }
 };
 
